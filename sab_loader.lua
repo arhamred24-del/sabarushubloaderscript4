@@ -1,46 +1,55 @@
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
--- This library allows for more custom color schemes
 
-local Window = Library.CreateLib("Arham's SAB Loader - GALAXY EDITION", "VapeV4")
+-- COLORS: (157, 0, 255) is Neon Purple
+local Window = Library.CreateLib("ARHAM'S SAB LOADER - GALAXY EDITION", "DarkTheme")
 
--- Creating the Galaxy Theme (Purple/Black/Neon)
+-- THEME OVERRIDE (Forcing Purple Glow)
+for i, v in pairs(game.CoreGui:GetDescendants()) do
+    if v:IsA("Frame") then
+        v.BackgroundColor3 = Color3.fromRGB(20, 0, 40) -- Deep Space Purple
+    elseif v:IsA("TextLabel") or v:IsA("TextButton") then
+        v.TextColor3 = Color3.fromRGB(180, 50, 255) -- Glowing Neon Purple
+    end
+end
+
+-- TABS
 local MainTab = Window:NewTab("Main Scripts")
-local MainSection = MainTab:NewSection("Galaxy Hub - Arham")
+local MainSection = MainTab:NewSection("Galaxy Hub")
 
--- BACKGROUND TWEAK: To get the galaxy effect, we use a custom purple theme
--- Note: Most libraries use pre-set colors, but we will force Purple Neon here.
-
-MainSection:NewButton("Lag Script", "Lags the server", function()
+-- 1. LAG SCRIPT (Updated as requested)
+MainSection:NewButton("Lag Script", "Lags the server using khelzzz's source", function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/khelzzz/x/refs/heads/main/best-lagger"))()
 end)
 
-MainSection:NewButton("Instant Steal", "Steals items instantly", function()
+-- 2. INSTANT STEAL
+MainSection:NewButton("Instant Steal", "AutoSteal Items", function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/AutoStealScript/InstantSteal/refs/heads/main/AutoSteal"))()
 end)
 
-MainSection:NewButton("Sab Hub Script", "Loads the SAB hub", function()
+-- 3. SAB HUB
+MainSection:NewButton("Sab Hub Script", "Vinx-Hub SAB Loader", function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Vinx-Hub/SAB/refs/heads/main/loader"))()
 end)
 
+-- 4. FLY
 MainSection:NewButton("Fly Script", "Toggle Flight", function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/ARUSCRIPT/Script/refs/heads/main/Script.lua",true))()
 end)
 
-MainSection:NewButton("Anti-Kick", "Prevents being kicked", function()
+-- 5. ANTI-KICK
+MainSection:NewButton("Anti-Kick", "Prevention System", function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Mjajas/ANTII/refs/heads/main/antikick.lua"))()
 end)
 
-MainSection:NewButton("Trax Visuals", "Visual enhancements", function()
+-- 6. TRAX VISUALS
+MainSection:NewButton("Trax Visuals", "Galaxy Graphics", function()
     loadstring(game:HttpGet("https://gitlab.com/traxscriptss/traxscriptss/-/raw/main/visual2.lua"))()
 end)
 
-MainSection:NewButton("Moreira Script", "Auto join bots", function()
+-- 7. MOREIRA SCRIPT
+MainSection:NewButton("Moreira Script", "AutoJoin Method", function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/AutoMoreiraMethodV3/AutoMoreiraV3/refs/heads/main/AutoJoinBots"))()
 end)
 
--- ADDING THE PURPLE GLOW
-for i, v in pairs(game.CoreGui:GetDescendants()) do
-    if v:IsA("TextLabel") or v:IsA("TextButton") then
-        v.TextColor3 = Color3.fromRGB(180, 0, 255) -- Neon Purple
-    end
-end
+-- ADDING A NOTIFICATION
+Library:Notify("Galaxy Loaded", "Welcome to the Purple Realm, Arham.", Color3.fromRGB(157, 0, 255))
