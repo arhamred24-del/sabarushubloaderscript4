@@ -1,24 +1,15 @@
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
 
--- COLORS: (157, 0, 255) is Neon Purple
-local Window = Library.CreateLib("ARHAM'S SAB LOADER - GALAXY EDITION", "DarkTheme")
+-- Creating the Window with a Purple "DarkTheme"
+local Window = Library.CreateLib("ARHAM'S GALAXY LOADER", "DarkTheme")
 
--- THEME OVERRIDE (Forcing Purple Glow)
-for i, v in pairs(game.CoreGui:GetDescendants()) do
-    if v:IsA("Frame") then
-        v.BackgroundColor3 = Color3.fromRGB(20, 0, 40) -- Deep Space Purple
-    elseif v:IsA("TextLabel") or v:IsA("TextButton") then
-        v.TextColor3 = Color3.fromRGB(180, 50, 255) -- Glowing Neon Purple
-    end
-end
-
--- TABS
+-- GALAXY THEME TWEAKS (Forces Purple Neon Glow)
 local MainTab = Window:NewTab("Main Scripts")
-local MainSection = MainTab:NewSection("Galaxy Hub")
+local MainSection = MainTab:NewSection("Galaxy Scripts")
 
--- 1. LAG SCRIPT (Updated as requested)
-MainSection:NewButton("Lag Script", "Lags the server using khelzzz's source", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/khelzzz/x/refs/heads/main/best-lagger"))()
+-- 1. YOUR NEW LAG SCRIPT (Updated to the paste.gg link)
+MainSection:NewButton("Lag Script", "999 Lagswitch (Paste.gg)", function()
+    loadstring(game:HttpGet("https://paste.gg/p/anonymous/d3492bd620bd4c46b54680ac80b0fa0d/files/161ddd9c992c4ceba3c298458d45188a/raw", true))()
 end)
 
 -- 2. INSTANT STEAL
@@ -51,5 +42,11 @@ MainSection:NewButton("Moreira Script", "AutoJoin Method", function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/AutoMoreiraMethodV3/AutoMoreiraV3/refs/heads/main/AutoJoinBots"))()
 end)
 
--- ADDING A NOTIFICATION
-Library:Notify("Galaxy Loaded", "Welcome to the Purple Realm, Arham.", Color3.fromRGB(157, 0, 255))
+-- PURPLE GLOW SETTINGS
+for i, v in pairs(game.CoreGui:GetDescendants()) do
+    if v:IsA("TextLabel") or v:IsA("TextButton") then
+        v.TextColor3 = Color3.fromRGB(180, 50, 255) -- Neon Purple
+    end
+end
+
+Library:Notify("Galaxy Loaded", "Welcome to the Realm, Arham.", Color3.fromRGB(157, 0, 255))
