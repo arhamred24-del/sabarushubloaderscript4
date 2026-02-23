@@ -1,6 +1,6 @@
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
 
--- 1. APPLY GALAXY SKYBOX (Brainrot Edition)
+-- 1. APPLY GALAXY SKYBOX
 local function ApplyGalaxy()
     local Lighting = game:GetService("Lighting")
     for _, v in pairs(Lighting:GetChildren()) do
@@ -20,7 +20,7 @@ local function ApplyGalaxy()
 end
 ApplyGalaxy()
 
--- 2. UI CONFIG
+-- 2. UI CONFIG (Ambitious Blue & Galaxy Mix)
 local colors = {
     SchemeColor = Color3.fromRGB(0, 150, 255), 
     Background = Color3.fromRGB(10, 10, 20),
@@ -31,54 +31,55 @@ local colors = {
 
 local Window = Library.CreateLib("ARHAM'S AMBITIOUS SAB", colors)
 
--- AMBITIOUS SAB TAB (Steal a Brainrot Focused)
+-- AMBITIOUS SAB TAB
 local AmbTab = Window:NewTab("Ambitious SAB")
 local AmbSection = AmbTab:NewSection("Steal a Brainrot Specials")
 
--- AUTO STEAL TOGGLE
-AmbSection:NewToggle("Auto Steal", "Automatically grabs nearby items", function(state)
+-- AUTO STEAL
+AmbSection:NewToggle("Auto Steal", "Instantly grabs items", function(state)
     _G.AutoSteal = state
     while _G.AutoSteal do
-        -- This looks for objects with "Handle" or "ClickDetector" common in SAB
         for i, v in pairs(game.Workspace:GetDescendants()) do
-            if v:IsA("ClickDetector") then
-                fireclickdetector(v)
-            end
+            if v:IsA("ClickDetector") then fireclickdetector(v) end
         end
         task.wait(0.1)
     end
 end)
 
--- LASERGUN TOGGLE
-AmbSection:NewToggle("Lasergun Fucker", "Rapid fire/Enhanced range", function(state)
-    _G.LaserEnhance = state
-    -- Custom logic for enhancing the Lasergun tool if held
-end)
-
--- MOVEMENT
-local MoveSection = AmbTab:NewSection("Movement")
-MoveSection:NewSlider("Move Speed", "Default is 16", 500, 16, function(s)
+-- MOVEMENT SLIDERS
+AmbSection:NewSlider("Move Speed", "Default: 16", 500, 16, function(s)
     game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = s
 end)
 
-MoveSection:NewSlider("Gravity", "Default is 196", 196, 0, function(s)
+AmbSection:NewSlider("Gravity", "Default: 196", 196, 0, function(s)
     game.Workspace.Gravity = s
 end)
 
--- YOUR OTHER SCRIPTS (Spawner, Lag, Dupe)
-local MainTab = Window:NewTab("Vault")
-local MainSection = MainTab:NewSection("Saved Scripts")
+-- DUEL SECTION (New!)
+local DuelSection = AmbTab:NewSection("Duel Section")
 
-MainSection:NewButton("Spawner Script", "Xware Spawner", function()
+DuelSection:NewButton("SAB Duel Hub", "Loads the Vinx-Hub Duel Script", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Vinx-Hub/SAB/refs/heads/main/loader"))()
+end)
+
+-- VAULT TAB (Your Saved Scripts)
+local VaultTab = Window:NewTab("Vault")
+local VSection = VaultTab:NewSection("Other Exploits")
+
+VSection:NewButton("Spawner Script", "Xware Spawner", function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Crypoth/StealABrainRotSpawner/refs/heads/main/XwareSpawner"))()
 end)
 
-MainSection:NewButton("Lag Script", "999 Lagswitch", function()
+VSection:NewButton("Lag Script", "999 Lagswitch", function()
     loadstring(game:HttpGet("https://paste.gg/p/anonymous/d3492bd620bd4c46b54680ac80b0fa0d/files/161ddd9c992c4ceba3c298458d45188a/raw", true))()
 end)
 
-MainSection:NewButton("Dupe 2", "Pastefy Method", function()
+VSection:NewButton("Dupe Script 1", "Brainrot Dupe", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/BrainrotDupeScript/SAB-DupeScript/refs/heads/main/DupeBrainrots"))()
+end)
+
+VSection:NewButton("Dupe Script 2", "Pastefy Method", function()
     loadstring(game:HttpGet("https://pastefy.app/HTy0RxVY/raw"))()
 end)
 
-Library:Notify("SAB Loaded", "Ready to steal everything, Arham.", Color3.fromRGB(0, 150, 255))
+Library:Notify("SAB Loaded", "Duel features ready.", Color3.fromRGB(0, 150, 255))
