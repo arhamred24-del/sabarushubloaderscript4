@@ -1,76 +1,70 @@
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local Title = Instance.new("TextLabel")
+local PlayerCount = Instance.new("TextLabel")
+local CommandGrid = Instance.new("ScrollingFrame")
+local UIGridLayout = Instance.new("UIGridLayout")
+local CloseButton = Instance.new("TextButton")
 
--- 1. GALAXY VISUALS
-local function ApplyGalaxy()
-    local Lighting = game:GetService("Lighting")
-    for _, v in pairs(Lighting:GetChildren()) do if v:IsA("Sky") then v:Destroy() end end
-    local Sky = Instance.new("Sky")
-    Sky.Name = "GalaxySky"; Sky.Parent = Lighting
-    Sky.SkyboxBk = "rbxassetid://159454299"; Sky.SkyboxDn = "rbxassetid://159454286"
-    Sky.SkyboxFt = "rbxassetid://159454293"; Sky.SkyboxLf = "rbxassetid://159454296"
-    Sky.SkyboxRt = "rbxassetid://159454289"; Sky.SkyboxUp = "rbxassetid://159454300"
-    Lighting.OutdoorAmbient = Color3.fromRGB(150, 0, 255)
-end
-ApplyGalaxy()
+-- Main UI Properties
+ScreenGui.Parent = game.CoreGui
+MainFrame.Name = "AdminPanel"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(45, 55, 60)
+MainFrame.Position = UDim2.new(0.5, -200, 0.5, -150)
+MainFrame.Size = UDim2.new(0, 400, 0, 300)
+MainFrame.Active = true
+MainFrame.Draggable = true -- Allows you to move it
 
-local Window = Library.CreateLib("ARHAM'S AMBITIOUS SAB", "DarkTheme")
-local AmbTab = Window:NewTab("Ambitious SAB")
+Title.Parent = MainFrame
+Title.Text = "ADMIN PANEL"
+Title.TextColor3 = Color3.new(1, 1, 1)
+Title.Size = UDim2.new(1, -40, 0, 40)
+Title.Font = Enum.Font.SourceSansBold
+Title.TextSize = 24
 
--- NEW SECTION: AUTO-KICK LOGIC
-local ProtectSection = AmbTab:NewSection("Item Protection")
+-- Player Counter Logic
+PlayerCount.Parent = MainFrame
+PlayerCount.Position = UDim2.new(0, 10, 0, 40)
+PlayerCount.Size = UDim2.new(0, 200, 0, 20)
+PlayerCount.BackgroundTransparency = 1
+PlayerCount.TextColor3 = Color3.new(1, 1, 1)
+PlayerCount.TextXAlignment = Enum.TextXAlignment.Left
 
-ProtectSection:NewToggle("Auto-Kick on Steal", "Kicks you instantly when you get a Brainrot", function(state)
-    _G.AutoKick = state
-    
-    local player = game.Players.LocalPlayer
-    local backpack = player:WaitForChild("Backpack")
-    
-    -- Monitors your backpack for new items
-    backpack.ChildAdded:Connect(function(child)
-        if _G.AutoKick and (child:IsA("Tool") or child.Name:find("Brainrot")) then
-            task.wait(0.05) -- Tiny delay to ensure the server registers the item is yours
-            player:Kick("ANTI-STEAL ACTIVE: You successfully secured a Brainrot!")
-        end
-    end)
-    
-    -- Also monitors your Character (in case you equip it instantly)
-    player.Character.ChildAdded:Connect(function(child)
-        if _G.AutoKick and child:IsA("Tool") then
-            player:Kick("ANTI-STEAL ACTIVE: Item secured in hand!")
-        end
-    end)
-end)
-
--- TRADE EXPLOITS & MEOW PANEL
-local TradeSection = AmbTab:NewSection("Trade Exploits")
-TradeSection:NewButton("Open Meow Toggle Panel", "Opens the red/blue/purple panel", function()
-    -- [The Meow Panel code from the previous step goes here]
-    Library:Notify("Meow Panel", "Panel is now active on your screen.", Color3.fromRGB(130, 60, 220))
-end)
-
--- MOVEMENT
-local MoveSection = AmbTab:NewSection("Movement")
-MoveSection:NewSlider("Move Speed", "Speed", 500, 16, function(s) game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = s end)
-MoveSection:NewToggle("Infinite Jump", "Jump spam", function(state)
-    _G.InfJump = state
-    game:GetService("UserInputService").JumpRequest:Connect(function()
-        if _G.InfJump then game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping") end
-    end)
-end)
-
--- SERVER TOOLS
-local ServerTab = Window:NewTab("Server")
-local S_Section = ServerTab:NewSection("Server Tools")
-S_Section:NewButton("Server Hop", "Find new lobby", function()
-    local HttpService = game:GetService("HttpService")
-    local TPS = game:GetService("TeleportService")
-    local Api = "https://games.roblox.com/v1/games/"..game.PlaceId.."/servers/Public?sortOrder=Desc&limit=100"
-    local _srv = HttpService:JSONDecode(game:HttpGet(Api))
-    for _, s in pairs(_srv.data) do
-        if s.playing < s.maxPlayers and s.id ~= game.JobId then
-            TPS:TeleportToPlaceInstance(game.PlaceId, s.id, game.Players.LocalPlayer)
-        end
+task.spawn(function()
+    while task.wait(1) do
+        PlayerCount.Text = "Players in game: " .. #game.Players:GetPlayers()
     end
 end)
 
-Library:Notify("SAB Loaded", "Auto-Kick & Meow Panel Ready", Color3.fromRGB(0, 150, 255))
+-- Command Grid
+CommandGrid.Parent = MainFrame
+CommandGrid.Position = UDim2.new(0, 10, 0, 70)
+CommandGrid.Size = UDim2.new(1, -20, 1, -80)
+CommandGrid.BackgroundTransparency = 1
+
+UIGridLayout.Parent = CommandGrid
+UIGridLayout.CellSize = UDim2.new(0, 185, 0, 40)
+UIGridLayout.Padding = UDim2.new(0, 5, 0, 5)
+
+-- Function to create buttons
+local function CreateCmd(name)
+    local btn = Instance.new("TextButton")
+    btn.Parent = CommandGrid
+    btn.Text = name
+    btn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    btn.TextColor3 = Color3.new(1, 1, 1)
+    btn.Font = Enum.Font.SourceSans
+    btn.TextSize = 18
+    
+    btn.MouseButton1Click:Connect(function()
+        print("Executing: " .. name)
+        -- You can link your local functions here
+    end)
+end
+
+-- Adding the commands from your photo
+local cmds = {";rocket", ";ragdoll", ";balloon", ";inverse", ";nightvision", ";jail", ";control", ";tiny", ";jumpscare", ";morph"}
+for _, cmd in pairs(cmds) do
+    CreateCmd(cmd)
+end
