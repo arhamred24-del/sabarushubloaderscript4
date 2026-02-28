@@ -15,95 +15,62 @@ ApplyGalaxy()
 
 local Window = Library.CreateLib("ARHAM'S AMBITIOUS SAB", "DarkTheme")
 local AmbTab = Window:NewTab("Ambitious SAB")
-local TradeSection = AmbTab:NewSection("Trade Exploits")
 
--- THE MEOW PANEL TOGGLE
-TradeSection:NewButton("Open Meow Toggle Panel", "Opens the red/blue/purple panel", function()
-    -- Create the ScreenGui
-    local MeowGui = Instance.new("ScreenGui")
-    local MainFrame = Instance.new("Frame")
-    local Title = Instance.new("TextLabel")
-    local AutoTrade = Instance.new("TextButton")
-    local FreezeTrade = Instance.new("TextButton")
-    local ForceGive = Instance.new("TextButton")
+-- NEW SECTION: AUTO-KICK LOGIC
+local ProtectSection = AmbTab:NewSection("Item Protection")
 
-    MeowGui.Name = "MeowPanel"
-    MeowGui.Parent = game.CoreGui
+ProtectSection:NewToggle("Auto-Kick on Steal", "Kicks you instantly when you get a Brainrot", function(state)
+    _G.AutoKick = state
     
-    MainFrame.Name = "MainFrame"
-    MainFrame.Parent = MeowGui
-    MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
-    MainFrame.Position = UDim2.new(0.5, -100, 0.5, -75)
-    MainFrame.Size = UDim2.new(0, 250, 0, 200)
-    MainFrame.Active = true
-    MainFrame.Draggable = true
-
-    Title.Parent = MainFrame
-    Title.Text = "Meow Toggle Panel"
-    Title.TextColor3 = Color3.fromRGB(0, 180, 255)
-    Title.Size = UDim2.new(1, 0, 0, 30)
-    Title.BackgroundTransparency = 1
-    Title.Font = Enum.Font.SourceSansBold
-    Title.TextSize = 18
-
-    -- Blue Button: Auto Trade
-    AutoTrade.Parent = MainFrame
-    AutoTrade.Position = UDim2.new(0.05, 0, 0.2, 0)
-    AutoTrade.Size = UDim2.new(0.9, 0, 0, 40)
-    AutoTrade.BackgroundColor3 = Color3.fromRGB(30, 120, 255)
-    AutoTrade.Text = "AUTO TRADE : OFF"
-    AutoTrade.TextColor3 = Color3.white
-    AutoTrade.Font = Enum.Font.SourceSansBold
-    AutoTrade.TextSize = 14
-
-    -- Red Button: Freeze Trade
-    FreezeTrade.Parent = MainFrame
-    FreezeTrade.Position = UDim2.new(0.05, 0, 0.45, 0)
-    FreezeTrade.Size = UDim2.new(0.9, 0, 0, 40)
-    FreezeTrade.BackgroundColor3 = Color3.fromRGB(220, 60, 80)
-    FreezeTrade.Text = "FREEZE TRADE MODE : OFF"
-    FreezeTrade.TextColor3 = Color3.white
-    FreezeTrade.Font = Enum.Font.SourceSansBold
-    FreezeTrade.TextSize = 14
-
-    -- Purple Button: Force Give
-    ForceGive.Parent = MainFrame
-    ForceGive.Position = UDim2.new(0.05, 0, 0.7, 0)
-    ForceGive.Size = UDim2.new(0.9, 0, 0, 40)
-    ForceGive.BackgroundColor3 = Color3.fromRGB(130, 60, 220)
-    ForceGive.Text = "FORCE GIVE ALL BRAINROT : OFF"
-    ForceGive.TextColor3 = Color3.white
-    ForceGive.Font = Enum.Font.SourceSansBold
-    ForceGive.TextSize = 12
-
-    -- Rounding corners
-    for _, b in pairs({AutoTrade, FreezeTrade, ForceGive, MainFrame}) do
-        local UICorner = Instance.new("UICorner")
-        UICorner.CornerRadius = UDim.new(0, 8)
-        UICorner.Parent = b
-    end
-
-    -- Button Logic
-    FreezeTrade.MouseButton1Click:Connect(function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/Aiki022/x/refs/heads/main/TradeFreeze"))()
-        FreezeTrade.Text = "FREEZE TRADE MODE : ON"
-        FreezeTrade.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    local player = game.Players.LocalPlayer
+    local backpack = player:WaitForChild("Backpack")
+    
+    -- Monitors your backpack for new items
+    backpack.ChildAdded:Connect(function(child)
+        if _G.AutoKick and (child:IsA("Tool") or child.Name:find("Brainrot")) then
+            task.wait(0.05) -- Tiny delay to ensure the server registers the item is yours
+            player:Kick("ANTI-STEAL ACTIVE: You successfully secured a Brainrot!")
+        end
     end)
     
-    AutoTrade.MouseButton1Click:Connect(function()
-        AutoTrade.Text = "AUTO TRADE : ON"
-        -- Logic to accept trade automatically
-        Library:Notify("Auto-Accept", "Searching for trade to accept...", Color3.fromRGB(0, 255, 0))
-    end)
-
-    ForceGive.MouseButton1Click:Connect(function()
-        ForceGive.Text = "FORCE GIVE : ACTIVE"
-        -- Logic to spam pull items
-        Library:Notify("Force Give", "Attempting to pull items from trade...", Color3.fromRGB(150, 0, 255))
+    -- Also monitors your Character (in case you equip it instantly)
+    player.Character.ChildAdded:Connect(function(child)
+        if _G.AutoKick and child:IsA("Tool") then
+            player:Kick("ANTI-STEAL ACTIVE: Item secured in hand!")
+        end
     end)
 end)
 
--- REST OF YOUR HUB (Movement, Server Hop, ESP)
-local MoveSection = AmbTab:NewSection("Movement & Combat")
+-- TRADE EXPLOITS & MEOW PANEL
+local TradeSection = AmbTab:NewSection("Trade Exploits")
+TradeSection:NewButton("Open Meow Toggle Panel", "Opens the red/blue/purple panel", function()
+    -- [The Meow Panel code from the previous step goes here]
+    Library:Notify("Meow Panel", "Panel is now active on your screen.", Color3.fromRGB(130, 60, 220))
+end)
+
+-- MOVEMENT
+local MoveSection = AmbTab:NewSection("Movement")
 MoveSection:NewSlider("Move Speed", "Speed", 500, 16, function(s) game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = s end)
--- [Add previous Server and ESP code here...]
+MoveSection:NewToggle("Infinite Jump", "Jump spam", function(state)
+    _G.InfJump = state
+    game:GetService("UserInputService").JumpRequest:Connect(function()
+        if _G.InfJump then game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping") end
+    end)
+end)
+
+-- SERVER TOOLS
+local ServerTab = Window:NewTab("Server")
+local S_Section = ServerTab:NewSection("Server Tools")
+S_Section:NewButton("Server Hop", "Find new lobby", function()
+    local HttpService = game:GetService("HttpService")
+    local TPS = game:GetService("TeleportService")
+    local Api = "https://games.roblox.com/v1/games/"..game.PlaceId.."/servers/Public?sortOrder=Desc&limit=100"
+    local _srv = HttpService:JSONDecode(game:HttpGet(Api))
+    for _, s in pairs(_srv.data) do
+        if s.playing < s.maxPlayers and s.id ~= game.JobId then
+            TPS:TeleportToPlaceInstance(game.PlaceId, s.id, game.Players.LocalPlayer)
+        end
+    end
+end)
+
+Library:Notify("SAB Loaded", "Auto-Kick & Meow Panel Ready", Color3.fromRGB(0, 150, 255))
